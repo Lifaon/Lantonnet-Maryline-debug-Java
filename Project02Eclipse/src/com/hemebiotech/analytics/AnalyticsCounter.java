@@ -1,46 +1,41 @@
 package com.hemebiotech.analytics;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 public class AnalyticsCounter {
-	private static int headacheCount = 0;
-	private static int rashCount = 0;
-	private static int pupilCount = 0;
-	
+
 	public static void main(String args[]) {
 		try {
-			BufferedReader reader = new BufferedReader (new FileReader("symptoms.txt"));
-			String line = reader.readLine();
+			System.out.println("Reading symptoms file...");
+			final ISymptomReader read = new ReadSymptomDataFromFile("../symptoms.txt");
+			final List<String> raw_symptoms = read.GetSymptoms();
 
-			int i = 0;
-			while (line != null) {
-				i++;
-				System.out.println("symptom from file: " + line);
-				if (line.equals("headache")) {
-					headacheCount++;
-					System.out.println("number of headaches: " + headacheCount);
-				}
-				else if (line.equals("rash")) {
-					rashCount++;
-				}
-				else if (line.contains("pupils")) {
-					pupilCount++;
-				}
-
-				line = reader.readLine();
-			}
-		
-			FileWriter writer = new FileWriter ("result.out");
-			writer.write("headache: " + headacheCount + "\n");
-			writer.write("rash: " + rashCount + "\n");
-			writer.write("dialated pupils: " + pupilCount + "\n");
-			writer.close();
+			System.out.println("Counting symptoms...");
+			final SortedMap<String, Integer> symptoms = countSymptoms(raw_symptoms);
+			
+			System.out.println("Writing output...");
+			final ISymptomWriter writer = new WriteSymptomDataToFile();
+			writer.writeSymptoms(symptoms);
 		}
 		catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 		}
+	}
+
+	public static SortedMap<String, Integer> countSymptoms(List<String> raw_symptoms) {
+		var ret = new TreeMap<String, Integer>();
+
+		try {
+			for (String symptom : raw_symptoms) {
+				final var count = ret.get(symptom);
+				ret.put(symptom, count == null ? 1 : count + 1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ret;
 	}
 }
