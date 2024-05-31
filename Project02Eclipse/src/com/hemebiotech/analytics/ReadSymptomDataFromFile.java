@@ -15,6 +15,7 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 	private String filepath;
 	
 	/**
+	 * Stores the given file to be processed later.
 	 * 
 	 * @param filepath a full or partial path to file with symptom strings in it, one per line
 	 */
@@ -22,8 +23,15 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 		this.filepath = filepath;
 	}
 	
+	/**
+	 * Reads the file given in the constructor.
+	 * If no data is available, return an empty list.
+	 * One line = one entry.
+	 * 
+	 * @return the unprocessed string list.
+	 */
 	@Override
-	public List<String> GetSymptoms() {
+	public List<String> getSymptoms() {
 		ArrayList<String> result = new ArrayList<String>();
 		
 		if (filepath != null) {
@@ -43,5 +51,4 @@ public class ReadSymptomDataFromFile implements ISymptomReader {
 		
 		return result;
 	}
-
 }
