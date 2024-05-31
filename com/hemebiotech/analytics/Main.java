@@ -13,7 +13,7 @@ public class Main {
 	public static void main(String args[]) {
 		try {
 			System.out.println("Reading symptoms file...");
-			final ISymptomReader reader = new ReadSymptomDataFromFile("../symptoms.txt");
+			final ISymptomReader reader = new ReadSymptomDataFromFile("symptoms.txt");
 			final List<String> raw_symptoms = reader.getSymptoms();
 
 			System.out.println("Counting symptoms...");
